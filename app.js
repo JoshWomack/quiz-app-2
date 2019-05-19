@@ -1,28 +1,35 @@
 const QUESTIONS = [
   {
-    question: "What number am I thinking of?",
-    answers: ["1", "2", "3", "4"],
-    correctAnswer: "3"
+    question: `What ingredient do the turtles not like on their pizza?`,
+    answers: ["Pepperoni", "Mushrooms", "Anchovies", "Sausage"],
+    correctAnswer: "Anchovies"
   },
   {
-    question: "What number am I thinking of this time?",
-    answers: ["1", "8", "444", "500"],
-    correctAnswer: "8"
+    question:
+      "What substance transformed the turtles into crime fighting ninjas?",
+    answers: ["Anabolic steroids", "Pizza", "The ooze", "Pepsi Clear"],
+    correctAnswer: "The ooze"
   },
   {
-    question: "How about this time?",
-    answers: ["999", "66", "19", "2"],
-    correctAnswer: "999"
+    question:
+      "What are the names of Shredder's henchman who were once human gang members?",
+    answers: [
+      "Bebop and Rocksteady",
+      "Bill and Ted",
+      "Casey Jones and Keno",
+      "Wild Bill and Steady Eddie"
+    ],
+    correctAnswer: "Bebop and Rocksteady"
   },
   {
-    question: "And this time?",
-    answers: ["2", "4", "6", "8"],
-    correctAnswer: "6"
+    question: "What year was the first Ninja Turtles video game released?",
+    answers: ["1982", "1984", "1989", "1991"],
+    correctAnswer: "1989"
   },
   {
-    question: "One last time...",
-    answers: ["88", "349", "34", "2938"],
-    correctAnswer: "2938"
+    question: "What is the name of Shredder's bodiless ally?",
+    answers: ["Splinter", "The Brain", "Tommy", "Krang"],
+    correctAnswer: "Krang"
   }
 ];
 
@@ -44,10 +51,9 @@ const STATE = {
 
 // function to render content to the page based on the boolean value of the views in STATE.render
 function render() {
-  console.log("render running");
-  if (STATE.render.startPage) {
+  if (STATE.render.startPage === true) {
     renderStartPage();
-  } else if (STATE.render.questionPage) {
+  } else if (STATE.render.questionPage === true) {
     renderQuestionPage();
   } else if (STATE.render.answerPage) {
     renderAnswerPage();
@@ -61,9 +67,9 @@ function render() {
 // Render start page for the app
 function renderStartPage() {
   CONTAINER.innerHTML = `
-      <div class="start-page js-start-page">
-      <p>
-        This is a quiz that will test whether you can guess the number.
+      <div class="start-page">
+      <p class>
+        This is a quiz that will test your knowledge of the Teenage Mutant Ninja Turtles.
       </p>
       <button id="js-start-quiz-button">Start Quiz</button>
       </div>
@@ -74,17 +80,23 @@ function renderStartPage() {
 // Render current question and answer form
 function renderQuestionPage() {
   CONTAINER.innerHTML = `
-    <div>
-    <div>
+  <div class="question-page">
+    <div class="score-container">
         <p>Question ${STATE.currentQuestion + 1} of ${QUESTIONS.length}</p>
         <p>Current Score: ${STATE.currentScore}</p>
     </div>
-    <div><P>${STATE.noAnswerSubmitted ? "You must select an answer" : ""}</p>
+    <div>
+        <P class="red-text">${
+          STATE.noAnswerSubmitted ? "You must select an answer" : ""
+        }</p>
     </div>
+    <div>
     <form id="question-form">
     ${getCurrentQuestion(QUESTIONS[STATE.currentQuestion])}
     <button type="submit" class="js-answer-submit">Submit Answer</button>
     </form>
+    </div>
+</div>
     `;
   STATE.noAnswerSubmitted = false;
   handleQuestionSubmit();
@@ -94,7 +106,7 @@ function renderAnswerPage() {
   console.log(STATE.currentQuestionCorrect);
   if (STATE.currentQuestionCorrect) {
     CONTAINER.innerHTML = `
-        <div>
+        <div class="answer-page">
             <p>That's correct!</p>
             <button id="js-next-question-button">${
               STATE.onLastQuestion ? "Results" : "Next Question"
@@ -103,7 +115,7 @@ function renderAnswerPage() {
         `;
   } else {
     CONTAINER.innerHTML = `
-        <div>
+        <div class="answer-page">
             <p>Sorry that's incorrect! The correct answer is ${
               QUESTIONS[STATE.currentQuestion].correctAnswer
             }.</p>
@@ -118,7 +130,7 @@ function renderAnswerPage() {
 
 function renderResultsPage() {
   CONTAINER.innerHTML = `
-    <div>
+  <div class="results-page">
         <p>You got ${STATE.currentScore} out of ${QUESTIONS.length} correct</p>
         <button id="js-reset-quiz-button">Play Again</button>
     </div>
@@ -161,6 +173,7 @@ function handleQuestionSubmit() {
   QUESTIONFORM.addEventListener("submit", e => {
     e.preventDefault();
     let currentAnswer = QUESTIONFORM.elements["answers"].value;
+    console.log(currentAnswer);
     if (currentAnswer === "") {
       STATE.noAnswerSubmitted = true;
       render();
@@ -210,14 +223,14 @@ function getCurrentQuestion(question) {
     .map((answer, index) => {
       return `
             <div class="answer-option">
-            <input type = "radio" name="answers" id=${index} value=${answer} />
+            <input type = "radio" name="answers" id=${index} value="${answer}" />
             <label for="answers">${answer}</label>
             </div>
             `;
     })
     .join("");
   return `
-      <p>${question.question}</p>
+      <p class="question-p">${question.question}</p>
       ${answers}
       `;
 }
