@@ -87,13 +87,15 @@ function renderQuestionPage() {
     </div>
     <div>
         <P class="red-text">${
-          STATE.noAnswerSubmitted ? "You must select an answer" : ""
+          STATE.noAnswerSubmitted ? "You must select an answer!" : ""
         }</p>
     </div>
     <div>
     <form id="question-form">
+    <fieldset>
     ${getCurrentQuestion(QUESTIONS[STATE.currentQuestion])}
     <button type="submit" class="js-answer-submit">Submit Answer</button>
+    </fieldset>
     </form>
     </div>
 </div>
@@ -131,7 +133,7 @@ function renderAnswerPage() {
 function renderResultsPage() {
   CONTAINER.innerHTML = `
   <div class="results-page">
-        <p>You got ${STATE.currentScore} out of ${QUESTIONS.length} correct</p>
+        <p>You got ${STATE.currentScore} out of ${QUESTIONS.length} correct!</p>
         <button id="js-reset-quiz-button">Play Again</button>
     </div>
     `;
@@ -222,15 +224,15 @@ function getCurrentQuestion(question) {
   const answers = question.answers
     .map((answer, index) => {
       return `
-            <div class="answer-option">
-            <input type = "radio" name="answers" id=${index} value="${answer}" />
-            <label for="answers">${answer}</label>
+            <div class="answer">
+            <input type = "radio" name="answers" id="answer-${index}" value="${answer}" />
+            <label for="answer-${index}">${answer}</label>
             </div>
             `;
     })
     .join("");
   return `
-      <p class="question-p">${question.question}</p>
+      <legend class="question-p">${question.question} </legend>
       ${answers}
       `;
 }
